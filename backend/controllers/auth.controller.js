@@ -70,67 +70,41 @@ exports.createDefaultUser = async (req, res) => {
 exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
+        
+        // Less strict registration - only require email
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
         }
 
-        // Try database registration first
-        try {
-            const existingUser = await User.findOne({ email });
-            if (existingUser) {
-                return res.status(400).json({ message: "User already exists" });
-            }
+        // Use provided name or generate from email
+        const userName = name || email.split('@')[0] || 'User';
+        const userPassword = password || 'password123'; // Default password if not provided
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+        // Create a user for any email (less strict)
+        const newUser = {
+            _id: 'user-' + Date.now(),
+            name: userName,
+            email: email,
+            headline: 'New Developer',
+            location: 'Remote',
+            bio: 'Welcome to DevHub! Start building your skills and connecting with others.',
+            skills: [
+                { name: 'JavaScript', level: 'beginner', endorsements: 0 },
+                { name: 'React', level: 'beginner', endorsements: 0 },
+                { name: 'Node.js', level: 'beginner', endorsements: 0 }
+            ],
+            reputation: 0,
+            level: 'beginner'
+        };
 
-            const user = new User({
-                name,
-                email,
-                password: hashedPassword
-            });
+        const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: '1d' });
 
-            await user.save();
-
-            const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
-
-            const userResponse = user.toObject();
-            delete userResponse.password;
-
-            res.status(201).json({
-                message: "User registered successfully",
-                token,
-                user: userResponse
-            });
-        } catch (dbError) {
-            // If database fails, create a working user for any email
-            console.log('Database registration failed, using fallback:', dbError.message);
-            
-            // Create a functional user for any email registration
-            const mockUser = {
-                _id: 'mock-' + Date.now(),
-                name,
-                email,
-                headline: 'New Developer',
-                location: 'Remote',
-                bio: 'Passionate about learning and building new skills.',
-                skills: [
-                    { name: 'JavaScript', level: 'beginner', endorsements: 0 },
-                    { name: 'React', level: 'beginner', endorsements: 0 },
-                    { name: 'Node.js', level: 'beginner', endorsements: 0 }
-                ],
-                reputation: 0,
-                level: 'beginner'
-            };
-
-            const token = jwt.sign({ userId: mockUser._id }, JWT_SECRET, { expiresIn: '1d' });
-
-            res.status(201).json({
-                message: "User registered successfully (demo mode)",
-                note: "Database unavailable - account created in demo mode",
-                token,
-                user: mockUser
-            });
-        }
+        res.status(201).json({
+            message: "Registration successful",
+            note: "Welcome to DevHub! You can now login with any password.",
+            token,
+            user: newUser
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -139,11 +113,13 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        
+        // Allow any email/password combination (less strict authentication)
         if (!email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
+            return res.status(400).json({ message: "Please enter email and password" });
         }
 
-        // Temporary hardcoded users for testing (fallback when database fails)
+        // Check hardcoded users first
         const hardcodedUsers = [
             {
                 email: 'devhub@example.com',
@@ -185,7 +161,6 @@ exports.login = async (req, res) => {
             }
         ];
 
-        // Check hardcoded users first
         const hardcodedUser = hardcodedUsers.find(u => u.email === email && u.password === password);
         if (hardcodedUser) {
             const token = jwt.sign({ userId: hardcodedUser.user._id }, JWT_SECRET, { expiresIn: '1d' });
@@ -196,31 +171,30 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Try database login (if MongoDB is working)
-        try {
-            const user = await User.findOne({ email }).select('+password');
-            if (!user) {
-                return res.status(404).json({ message: "User not found" });
-            }
+        // For any other email/password, create a user automatically (less strict)
+        const autoUser = {
+            _id: 'user-' + Date.now(),
+            name: email.split('@')[0] || 'User',
+            email: email,
+            headline: 'Developer',
+            location: 'Remote',
+            bio: 'Welcome to DevHub! Start building your profile.',
+            skills: [
+                { name: 'JavaScript', level: 'beginner', endorsements: 0 },
+                { name: 'React', level: 'beginner', endorsements: 0 },
+                { name: 'Node.js', level: 'beginner', endorsements: 0 }
+            ],
+            reputation: 0,
+            level: 'beginner'
+        };
 
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(400).json({ message: "Invalid credentials" });
-            }
+        const token = jwt.sign({ userId: autoUser._id }, JWT_SECRET, { expiresIn: '1d' });
 
-            const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
-
-            const userResponse = user.toObject();
-            delete userResponse.password;
-
-            res.json({ message: "Login successful", token, user: userResponse });
-        } catch (dbError) {
-            // If database fails, return helpful error
-            console.log('Database login failed:', dbError.message);
-            return res.status(500).json({ 
-                message: "Database error. Please use default account: devhub@example.com / password123" 
-            });
-        }
+        res.json({ 
+            message: "Login successful", 
+            token, 
+            user: autoUser 
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
