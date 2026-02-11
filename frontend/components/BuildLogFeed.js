@@ -1,47 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { 
-  fetchBuildLogs, 
-  createBuildLog, 
-  likeBuildLog, 
-  addComment, 
-  requestHelp 
-} from '../store/slices/buildLogSlice';
-import { 
-  BookOpen, 
-  Code, 
-  TestTube, 
-  Rocket, 
-  AlertTriangle, 
-  Heart, 
-  MessageCircle, 
-  HelpCircle,
-  Plus,
-  Filter
-} from 'lucide-react';
-
-const phaseIcons = {
-  learning: BookOpen,
-  building: Code,
-  testing: TestTube,
-  deployment: Rocket,
-  troubleshooting: AlertTriangle
-};
-
-const phaseColors = {
-  learning: 'bg-blue-100 text-blue-800',
-  building: 'bg-green-100 text-green-800',
-  testing: 'bg-yellow-100 text-yellow-800',
-  deployment: 'bg-purple-100 text-purple-800',
-  troubleshooting: 'bg-red-100 text-red-800'
-};
+import { fetchBuildLogs, createBuildLog } from '../store/slices/buildLogSlice';
+import { Plus, Filter, Code } from 'lucide-react';
+import BuildLogCard from './BuildLogCard';
 
 export default function BuildLogFeed() {
   const dispatch = useDispatch();
-  const { buildLogs, isLoading, error, pagination } = useSelector((state) => state.buildLogs);
+  const { buildLogs, isLoading, error } = useSelector((state) => state.buildLogs);
   const { isAuthenticated } = useSelector((state) => state.auth);
-  
+
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newLog, setNewLog] = useState({
     title: '',
@@ -78,20 +46,6 @@ export default function BuildLogFeed() {
     }
   };
 
-  const handleLike = async (logId) => {
-    dispatch(likeBuildLog(logId));
-  };
-
-  const handleComment = async (logId, text) => {
-    if (!text.trim()) return;
-    dispatch(addComment({ logId, text }));
-  };
-
-  const handleHelpRequest = async (logId, message) => {
-    if (!message.trim()) return;
-    dispatch(requestHelp({ logId, message }));
-  };
-
   const addTag = (e) => {
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
@@ -103,9 +57,9 @@ export default function BuildLogFeed() {
   };
 
   const removeTag = (tagToRemove) => {
-    setNewLog({ 
-      ...newLog, 
-      tags: newLog.tags.filter(tag => tag !== tagToRemove) 
+    setNewLog({
+      ...newLog,
+      tags: newLog.tags.filter(tag => tag !== tagToRemove)
     });
   };
 
@@ -299,100 +253,9 @@ export default function BuildLogFeed() {
         </div>
       ) : (
         <div className="space-y-6">
-          {buildLogs.map((log) => {
-            const PhaseIcon = phaseIcons[log.phase];
-            return (
-              <div key={log._id} className="bg-white rounded-lg shadow-md p-6">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    {log.userId?.profilePic ? (
-                      <img
-                        src={`http://localhost:4000${log.userId.profilePic}`}
-                        alt={log.userId.name}
-                        className="h-10 w-10 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span className="text-gray-500 font-medium">
-                          {log.userId?.name?.[0] || 'U'}
-                        </span>
-                      </div>
-                    )}
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{log.userId?.name}</h4>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <span>Day {log.day}</span>
-                        <span>•</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${phaseColors[log.phase]}`}>
-                          <PhaseIcon className="h-3 w-3 inline mr-1" />
-                          {log.phase}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {new Date(log.createdAt).toLocaleDateString()}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{log.title}</h3>
-                  <p className="text-gray-700 mb-3">{log.description}</p>
-                  
-                  {/* Progress Bar */}
-                  <div className="mb-3">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Progress</span>
-                      <span>{log.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${log.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  {/* Tags */}
-                  {log.tags && log.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {log.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-4 pt-4 border-t">
-                  <button
-                    onClick={() => handleLike(log._id)}
-                    className={`flex items-center gap-2 text-sm ${log.isLiked ? 'text-red-600' : 'text-gray-600'} hover:text-red-600 transition-colors`}
-                  >
-                    <Heart className={`h-4 w-4 ${log.isLiked ? 'fill-current' : ''}`} />
-                    <span>{log.likesCount || 0}</span>
-                  </button>
-                  
-                  <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors">
-                    <MessageCircle className="h-4 w-4" />
-                    <span>{log.comments?.length || 0}</span>
-                  </button>
-                  
-                  <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-green-600 transition-colors">
-                    <HelpCircle className="h-4 w-4" />
-                    <span>{log.helpRequests?.length || 0}</span>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {buildLogs.map((log) => (
+            <BuildLogCard key={log._id} log={log} />
+          ))}
         </div>
       )}
     </div>

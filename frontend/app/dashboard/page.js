@@ -7,12 +7,19 @@ import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import BuildLogFeed from '../../components/BuildLogFeed';
 import Widgets from '../../components/Widgets';
+import Notifications from '../../components/Notifications';
+import JobBoard from '../../components/JobBoard';
+import MentorshipMatching from '../../components/MentorshipMatching';
+import AchievementBadges from '../../components/AchievementBadges';
+import LearningPaths from '../../components/LearningPaths';
+import CodePlayground from '../../components/CodePlayground';
 
 export default function Dashboard() {
     const dispatch = useDispatch();
     const router = useRouter();
     const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
     const [isClient, setIsClient] = useState(false);
+    const [activeTab, setActiveTab] = useState('feed');
 
     useEffect(() => {
         setIsClient(true);
@@ -41,19 +48,72 @@ export default function Dashboard() {
         return null;
     }
 
+    const tabs = [
+        { id: 'feed', label: 'Feed', icon: '📝' },
+        { id: 'jobs', label: 'Jobs', icon: '💼' },
+        { id: 'mentorship', label: 'Mentorship', icon: '👥' },
+        { id: 'achievements', label: 'Achievements', icon: '🏆' },
+        { id: 'learning', label: 'Learning', icon: '📚' },
+        { id: 'playground', label: 'Code', icon: '💻' }
+    ];
+
     return (
-        <div className="min-h-screen bg-[#F3F2EF]">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
             <Navbar />
-            <div className="max-w-7xl mx-auto pt-6 px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="md:col-span-1">
-                        <Sidebar />
+            <div className="max-w-7xl mx-auto pt-8 px-6 pb-12">
+                {/* Tab Navigation */}
+                <div className="mb-8">
+                    <div className="flex gap-1 p-1 bg-white rounded-xl shadow-lg border border-gray-200">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition-all duration-300 ${
+                                    activeTab === tab.id
+                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md transform scale-105'
+                                        : 'text-gray-600 hover:bg-gray-100 hover:scale-105'
+                                }`}
+                            >
+                                <span className="mr-2 text-lg">{tab.icon}</span>
+                                {tab.label}
+                            </button>
+                        ))}
                     </div>
-                    <div className="md:col-span-2">
-                        <BuildLogFeed />
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Left Sidebar */}
+                    <div className="w-full lg:w-1/4 space-y-6">
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                            <Sidebar user={user} />
+                        </div>
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                            <Notifications user={user} />
+                        </div>
                     </div>
-                    <div className="md:col-span-1">
-                        <Widgets />
+                    
+                    {/* Main Content */}
+                    <div className="w-full lg:w-1/2">
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 min-h-[600px]">
+                            {activeTab === 'feed' && <BuildLogFeed />}
+                            {activeTab === 'jobs' && <JobBoard />}
+                            {activeTab === 'mentorship' && <MentorshipMatching />}
+                            {activeTab === 'achievements' && <AchievementBadges userAchievements={[]} userStats={{}} />}
+                            {activeTab === 'learning' && <LearningPaths />}
+                            {activeTab === 'playground' && <CodePlayground />}
+                        </div>
+                    </div>
+                    
+                    {/* Right Sidebar */}
+                    <div className="w-full lg:w-1/4 space-y-6">
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                            <Widgets />
+                        </div>
+                        {activeTab === 'feed' && (
+                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                                <AchievementBadges userAchievements={[]} userStats={{}} compact={true} />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

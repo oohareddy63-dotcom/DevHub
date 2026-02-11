@@ -5,7 +5,7 @@ const User = require('../models/user.model');
 exports.createBuildLog = async (req, res) => {
     try {
         const { title, description, day, phase, progress, attachments, tags, isPublic } = req.body;
-        
+
         // Try database creation first
         try {
             const buildLog = new BuildLog({
@@ -37,7 +37,7 @@ exports.createBuildLog = async (req, res) => {
         } catch (dbError) {
             // Fallback when database fails
             console.log('Database build log creation failed, using fallback:', dbError.message);
-            
+
             // Create mock build log for demo
             const mockBuildLog = {
                 _id: 'mock-' + Date.now(),
@@ -117,8 +117,8 @@ exports.getUserBuildLogs = async (req, res) => {
         const { page = 1, limit = 10 } = req.query;
         const skip = (page - 1) * limit;
 
-        const buildLogs = await BuildLog.find({ 
-            userId, 
+        const buildLogs = await BuildLog.find({
+            userId,
             $or: [
                 { isPublic: true },
                 { userId: req.user?.userId } // User can see their own private logs
@@ -129,7 +129,7 @@ exports.getUserBuildLogs = async (req, res) => {
             .skip(skip)
             .limit(parseInt(limit));
 
-        const total = await BuildLog.countDocuments({ 
+        const total = await BuildLog.countDocuments({
             userId,
             $or: [
                 { isPublic: true },
@@ -161,13 +161,13 @@ exports.likeBuildLog = async (req, res) => {
             return res.status(404).json({ message: "Build log not found" });
         }
 
-        const existingLike = buildLog.likes.find(like => 
+        const existingLike = buildLog.likes.find(like =>
             like.userId.toString() === userId
         );
 
         if (existingLike) {
             // Remove like
-            buildLog.likes = buildLog.likes.filter(like => 
+            buildLog.likes = buildLog.likes.filter(like =>
                 like.userId.toString() !== userId
             );
         } else {
@@ -279,9 +279,9 @@ exports.updateBuildLog = async (req, res) => {
         const { id } = req.params;
         const { title, description, phase, progress, attachments, tags, isPublic } = req.body;
 
-        const buildLog = await BuildLog.findOne({ 
-            _id: id, 
-            userId: req.user.userId 
+        const buildLog = await BuildLog.findOne({
+            _id: id,
+            userId: req.user.userId
         });
 
         if (!buildLog) {
@@ -316,9 +316,9 @@ exports.deleteBuildLog = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const buildLog = await BuildLog.findOne({ 
-            _id: id, 
-            userId: req.user.userId 
+        const buildLog = await BuildLog.findOne({
+            _id: id,
+            userId: req.user.userId
         });
 
         if (!buildLog) {
@@ -333,6 +333,187 @@ exports.deleteBuildLog = async (req, res) => {
         });
 
         res.json({ message: "Build log deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Add Progress Update
+exports.addProgressUpdate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { percentage, note, date } = req.body;
+        const userId = req.user.userId;
+
+        const buildLog = await BuildLog.findOne({ _id: id, userId });
+        if (!buildLog) {
+            return res.status(404).json({ message: "Build log not found or unauthorized" });
+        }
+
+        buildLog.progressUpdates.push({
+            percentage,
+            note,
+            date: date || new Date()
+        });
+
+        // Update main progress
+        buildLog.progress = percentage;
+
+        await buildLog.save();
+
+        res.json({
+            message: "Progress update added",
+            buildLog
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Add Blocker
+exports.addBlocker = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description } = req.body;
+        const userId = req.user.userId;
+
+        const buildLog = await BuildLog.findOne({ _id: id, userId });
+        if (!buildLog) {
+            return res.status(404).json({ message: "Build log not found or unauthorized" });
+        }
+
+        buildLog.blockers.push({
+            title,
+            description,
+            status: 'open',
+            solutions: []
+        });
+
+        await buildLog.save();
+
+        res.json({
+            message: "Blocker added",
+            blocker: buildLog.blockers[buildLog.blockers.length - 1]
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Resolve Blocker
+exports.resolveBlocker = async (req, res) => {
+    try {
+        const { id, blockerId } = req.params;
+        const { solutionId } = req.body; // Optional: mark a specific solution as accepted
+        const userId = req.user.userId;
+
+        const buildLog = await BuildLog.findOne({ _id: id, userId });
+        if (!buildLog) {
+            return res.status(404).json({ message: "Build log not found or unauthorized" });
+        }
+
+        const blocker = buildLog.blockers.id(blockerId);
+        if (!blocker) {
+            return res.status(404).json({ message: "Blocker not found" });
+        }
+
+        blocker.status = 'resolved';
+        blocker.resolvedAt = new Date();
+
+        if (solutionId) {
+            const solution = blocker.solutions.id(solutionId);
+            if (solution) {
+                solution.isAccepted = true;
+            }
+        }
+
+        await buildLog.save();
+
+        res.json({
+            message: "Blocker resolved",
+            blocker
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Add Solution to Blocker
+exports.addBlockerSolution = async (req, res) => {
+    try {
+        const { id, blockerId } = req.params;
+        const { text } = req.body;
+        const userId = req.user.userId;
+
+        const buildLog = await BuildLog.findById(id);
+        if (!buildLog) {
+            return res.status(404).json({ message: "Build log not found" });
+        }
+
+        const blocker = buildLog.blockers.id(blockerId);
+        if (!blocker) {
+            return res.status(404).json({ message: "Blocker not found" });
+        }
+
+        blocker.solutions.push({
+            userId,
+            text,
+            upvotes: [],
+            isAccepted: false
+        });
+
+        await buildLog.save();
+
+        // Populate user for the new solution
+        await buildLog.populate({
+            path: 'blockers.solutions.userId',
+            select: 'name profilePic'
+        });
+
+        const updatedBlocker = buildLog.blockers.id(blockerId);
+        res.json({
+            message: "Solution added",
+            solution: updatedBlocker.solutions[updatedBlocker.solutions.length - 1]
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Vote on Solution
+exports.voteBlockerSolution = async (req, res) => {
+    try {
+        const { id, blockerId, solutionId } = req.params;
+        const userId = req.user.userId;
+
+        const buildLog = await BuildLog.findById(id);
+        if (!buildLog) {
+            return res.status(404).json({ message: "Build log not found" });
+        }
+
+        const blocker = buildLog.blockers.id(blockerId);
+        if (!blocker) {
+            return res.status(404).json({ message: "Blocker not found" });
+        }
+
+        const solution = blocker.solutions.id(solutionId);
+        if (!solution) {
+            return res.status(404).json({ message: "Solution not found" });
+        }
+
+        const existingVoteIndex = solution.upvotes.indexOf(userId);
+        if (existingVoteIndex === -1) {
+            solution.upvotes.push(userId);
+        } else {
+            solution.upvotes.splice(existingVoteIndex, 1);
+        }
+
+        await buildLog.save();
+
+        res.json({
+            message: "Vote updated",
+            upvotes: solution.upvotes.length
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }

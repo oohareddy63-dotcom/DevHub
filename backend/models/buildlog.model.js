@@ -78,6 +78,61 @@ const buildLogSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    progressUpdates: [{
+        percentage: {
+            type: Number,
+            required: true,
+            min: 0,
+            max: 100
+        },
+        note: String,
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    blockers: [{
+        title: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        status: {
+            type: String,
+            enum: ['open', 'resolved'],
+            default: 'open'
+        },
+        solutions: [{
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            text: {
+                type: String,
+                required: true
+            },
+            upvotes: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            }],
+            isAccepted: {
+                type: Boolean,
+                default: false
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            }
+        }],
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        resolvedAt: Date
+    }],
     updatedAt: {
         type: Date,
         default: Date.now
