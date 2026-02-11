@@ -81,19 +81,15 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Left Sidebar */}
-                    <div className="w-full lg:w-1/4 space-y-6">
-                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                <div className="dashboard-layout">
+                    {/* Left Section - Main Content */}
+                    <div className="left-section">
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
                             <Sidebar user={user} />
                         </div>
-                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
                             <Notifications user={user} />
                         </div>
-                    </div>
-                    
-                    {/* Main Content */}
-                    <div className="w-full lg:w-1/2">
                         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 min-h-[600px]">
                             {activeTab === 'feed' && <BuildLogFeed />}
                             {activeTab === 'jobs' && <JobBoard />}
@@ -104,9 +100,9 @@ export default function Dashboard() {
                         </div>
                     </div>
                     
-                    {/* Right Sidebar */}
-                    <div className="w-full lg:w-1/4 space-y-6">
-                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                    {/* Right Section - Widgets */}
+                    <div className="right-section">
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
                             <Widgets />
                         </div>
                         {activeTab === 'feed' && (

@@ -19,6 +19,24 @@
   }
 }
 
+/* Dashboard Layout Flex Structure */
+.dashboard-layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start;
+}
+
+.left-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.right-section {
+  width: 340px;
+  flex-shrink: 0;
+}
+
 /* Achievement Badges CSS Grid Layout */
 .badges-container {
   display: grid;
@@ -111,6 +129,17 @@
   background: #3B82F6;
   border-color: #3B82F6;
   color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1100px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .right-section {
+    width: 100%;
+  }
 }
 
 body {
