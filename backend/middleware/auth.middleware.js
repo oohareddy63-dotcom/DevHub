@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
 
+// Fallback JWT secret if not set in .env (must match auth.controller.js)
+const JWT_SECRET = process.env.JWT_SECRET && process.env.JWT_SECRET.trim() ? process.env.JWT_SECRET : 'fallback_secret_change_in_production';
+
 module.exports = (req, res, next) => {
     // Get token from header
     const authHeader = req.header('Authorization');
@@ -10,7 +13,7 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.user = decoded;
         next();
     } catch (error) {

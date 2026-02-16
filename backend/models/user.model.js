@@ -13,7 +13,7 @@ const skillSchema = new mongoose.Schema({
     },
     endorsements: [{
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User'
         },
         comment: String,
@@ -94,6 +94,9 @@ const buildLogSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+    },
     name: {
         type: String,
         required: true
@@ -125,7 +128,7 @@ const userSchema = new mongoose.Schema({
     buildLogs: [buildLogSchema],
     collaborators: [{
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User'
         },
         relationship: {
@@ -140,7 +143,7 @@ const userSchema = new mongoose.Schema({
     }],
     collaborationRequests: [{
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User'
         },
         relationship: {
@@ -164,11 +167,11 @@ const userSchema = new mongoose.Schema({
         default: 'beginner'
     },
     connections: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User'
     }],
     connectionRequests: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User'
     }],
     createdAt: {

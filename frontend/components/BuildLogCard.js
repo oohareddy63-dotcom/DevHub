@@ -15,7 +15,8 @@ import {
     BookOpen, Code, TestTube, Rocket, AlertTriangle,
     Heart, MessageCircle, HelpCircle,
     ChevronDown, ChevronUp, CheckCircle, XCircle,
-    Calendar, TrendingUp, AlertOctagon, ThumbsUp, Check
+    Calendar, TrendingUp, AlertOctagon, ThumbsUp, Check,
+    AlertCircle
 } from 'lucide-react';
 
 const phaseIcons = {

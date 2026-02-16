@@ -6,67 +6,45 @@ exports.createBuildLog = async (req, res) => {
     try {
         const { title, description, day, phase, progress, attachments, tags, isPublic } = req.body;
 
-        // Try database creation first
-        try {
-            const buildLog = new BuildLog({
-                userId: req.user.userId,
-                title,
-                description,
-                day,
-                phase,
-                progress: progress || 0,
-                attachments: attachments || [],
-                tags: tags || [],
-                isPublic: isPublic !== false
+        // Validate required fields
+        if (!title || !description || !day || !phase) {
+            return res.status(400).json({ 
+                message: "Please provide all required fields: title, description, day, phase" 
             });
+        }
 
-            await buildLog.save();
+        const buildLog = new BuildLog({
+            userId: req.user.userId,
+            title,
+            description,
+            day: parseInt(day),
+            phase,
+            progress: progress || 0,
+            attachments: attachments || [],
+            tags: tags || [],
+            isPublic: isPublic !== false
+        });
 
-            // Update user's build logs
+        await buildLog.save();
+
+        // Try to update user's build logs (may fail for hardcoded users, that's ok)
+        try {
             await User.findByIdAndUpdate(req.user.userId, {
                 $push: { buildLogs: buildLog._id }
             });
-
-            // Populate user data for response
-            await buildLog.populate('userId', 'name profilePic');
-
-            res.status(201).json({
-                message: "Build log created successfully",
-                buildLog
-            });
-        } catch (dbError) {
-            // Fallback when database fails
-            console.log('Database build log creation failed, using fallback:', dbError.message);
-
-            // Create mock build log for demo
-            const mockBuildLog = {
-                _id: 'mock-' + Date.now(),
-                userId: {
-                    _id: req.user.userId,
-                    name: 'Itha Reddy', // Use logged-in user's name
-                    profilePic: null
-                },
-                title,
-                description,
-                day,
-                phase,
-                progress: progress || 0,
-                attachments: attachments || [],
-                tags: tags || [],
-                isPublic: isPublic !== false,
-                likesCount: 0,
-                comments: [],
-                helpRequests: [],
-                createdAt: new Date().toISOString()
-            };
-
-            res.status(201).json({
-                message: "Build log created successfully (demo mode)",
-                note: "Database unavailable - build log saved in memory only",
-                buildLog: mockBuildLog
-            });
+        } catch (userUpdateError) {
+            console.log('User update skipped (hardcoded user):', userUpdateError.message);
         }
+
+        // Populate user data for response
+        await buildLog.populate('userId', 'name profilePic');
+
+        res.status(201).json({
+            message: "Build log created successfully",
+            buildLog
+        });
     } catch (error) {
+        console.error('Error creating build log:', error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
@@ -74,38 +52,34 @@ exports.createBuildLog = async (req, res) => {
 // Get Build Logs (Feed)
 exports.getBuildLogs = async (req, res) => {
     try {
-        // Return mock data for now to test frontend
-        const mockBuildLogs = [
-            {
-                _id: '1',
-                userId: {
-                    _id: 'user1',
-                    name: 'John Developer',
-                    profilePic: null
-                },
-                title: 'Learning React Hooks',
-                description: 'Day 1 of learning React Hooks - understanding useState and useEffect',
-                day: 1,
-                phase: 'learning',
-                progress: 25,
-                tags: ['react', 'hooks', 'frontend'],
-                isPublic: true,
-                likesCount: 5,
-                comments: [],
-                helpRequests: [],
-                createdAt: new Date().toISOString()
-            }
-        ];
+        const { page = 1, limit = 10, phase = '' } = req.query;
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        // Build query filter
+        const filter = { isPublic: true };
+        if (phase && ['learning', 'building', 'testing', 'deployment', 'troubleshooting'].includes(phase)) {
+            filter.phase = phase;
+        }
+
+        // Fetch from database
+        const buildLogs = await BuildLog.find(filter)
+            .populate('userId', 'name profilePic')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        const total = await BuildLog.countDocuments(filter);
 
         res.json({
-            buildLogs: mockBuildLogs,
+            buildLogs,
             pagination: {
-                currentPage: 1,
-                totalPages: 1,
-                totalLogs: 1
+                currentPage: parseInt(page),
+                totalPages: Math.ceil(total / parseInt(limit)),
+                totalLogs: total
             }
         });
     } catch (error) {
+        console.error('Error fetching build logs:', error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };

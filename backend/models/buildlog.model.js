@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const buildLogSchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: true
     },
@@ -40,7 +40,7 @@ const buildLogSchema = new mongoose.Schema({
     tags: [String],
     helpRequests: [{
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User'
         },
         message: String,
@@ -51,7 +51,7 @@ const buildLogSchema = new mongoose.Schema({
     }],
     likes: [{
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User'
         },
         createdAt: {
@@ -61,7 +61,7 @@ const buildLogSchema = new mongoose.Schema({
     }],
     comments: [{
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User'
         },
         text: String,
@@ -107,7 +107,7 @@ const buildLogSchema = new mongoose.Schema({
         },
         solutions: [{
             userId: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: String,
                 ref: 'User'
             },
             text: {
@@ -115,7 +115,7 @@ const buildLogSchema = new mongoose.Schema({
                 required: true
             },
             upvotes: [{
-                type: mongoose.Schema.Types.ObjectId,
+                type: String,
                 ref: 'User'
             }],
             isAccepted: {
