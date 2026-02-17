@@ -315,11 +315,8 @@ git commit -m "feat: add new feature"
 git push origin feature/new-feature
 ```
 
-## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Next.js Team**: For the excellent React framework
 - **MongoDB**: For the flexible database solution
@@ -327,14 +324,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Redux Toolkit**: For state management solution
 - **Open Source Community**: For the amazing tools and libraries
 
-## 📞 Support
-
-For support and questions:
-- **GitHub Issues**: Report bugs and request features
-- **Email**: Contact the development team
-- **Documentation**: Refer to this README and code comments
-
----
 
 **Built with ❤️ by Oohareddy**
 
