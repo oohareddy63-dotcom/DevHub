@@ -2,7 +2,7 @@
 
 A comprehensive LinkedIn-inspired developer networking platform built with modern web technologies. DevHub enables developers to connect, share knowledge, showcase skills, and collaborate on projects.
 
-## 🚀 Features
+## Features
 
 ### Core Functionality
 - **User Authentication** - Secure login/registration with JWT tokens
