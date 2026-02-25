@@ -1,9 +1,26 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+// Determine the API base URL with multiple fallbacks
+const getApiBaseUrl = () => {
+    // Priority 1: Environment variable from Render
+    if (process.env.NEXT_PUBLIC_API_URL) {
+        return process.env.NEXT_PUBLIC_API_URL;
+    }
+    
+    // Priority 2: Check if we're in production (deployed)
+    if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+        return 'https://devhub-7.onrender.com/api';
+    }
+    
+    // Priority 3: Local development
+    return 'http://localhost:4000/api';
+};
+
+const BASE_URL = getApiBaseUrl();
 
 // Log the API URL being used (helps debug production issues)
 if (typeof window !== 'undefined') {
-    console.log('API Base URL:', BASE_URL);
-    console.log('Environment:', process.env.NODE_ENV);
+    console.log('🔗 API Base URL:', BASE_URL);
+    console.log('🌍 Environment:', process.env.NODE_ENV);
+    console.log('🏠 Hostname:', window.location.hostname);
 }
 
 // Safe localStorage helpers for SSR
