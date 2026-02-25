@@ -24,43 +24,86 @@ export { getLocalStorageItem, setLocalStorageItem, removeLocalStorageItem };
 
 export const api = {
     post: async (endpoint, data, token = null) => {
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
+            console.log('API Call:', `${BASE_URL}${endpoint}`);
+            
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(data),
+            });
+            
+            // Check content type before parsing
+            const contentType = response.headers.get('content-type');
+            
+            if (!response.ok) {
+                // Try to parse error as JSON, fallback to text
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status}. Backend might be down or unreachable.`);
+                }
+            }
+            
+            // Parse successful response
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response. Check if backend is running correctly.');
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
         }
-        const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-        
-        return response.json();
     },
     get: async (endpoint, token = null) => {
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
+            console.log('API Call:', `${BASE_URL}${endpoint}`);
+            
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
+                method: 'GET',
+                headers,
+            });
+            
+            // Check content type before parsing
+            const contentType = response.headers.get('content-type');
+            
+            if (!response.ok) {
+                // Try to parse error as JSON, fallback to text
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                } else {
+                    throw new Error(`Server error: ${response.status}. Backend might be down or unreachable.`);
+                }
+            }
+            
+            // Parse successful response
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response. Check if backend is running correctly.');
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
         }
-        const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'GET',
-            headers,
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-        
-        return response.json();
     },
     put: async (endpoint, data, token = null) => {
         const headers = {
