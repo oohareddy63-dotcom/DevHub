@@ -87,8 +87,8 @@ DevHub/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- MongoDB (local installation or MongoDB Atlas)
+- Node.js (v16 or higher)
+- MongoDB Atlas account (already configured)
 - npm (comes with Node.js)
 
 ### Installation Steps
@@ -112,29 +112,56 @@ DevHub/
    ```
 
 4. **Environment Setup**
-   ```bash
-   # In backend directory
-   cp .env.example .env
-   # Edit .env with your MongoDB URI and JWT secret
-   ```
+   
+   Environment files have been created with MongoDB connection configured:
+   - `backend/.env` - Contains MongoDB URI and server configuration
+   - `frontend/.env.local` - Contains API URL configuration
 
-5. **Start Backend Server**
+5. **Test MongoDB Connection**
    ```bash
    cd backend
-   node server.js
+   node test-connection.js
+   ```
+
+6. **Start Both Servers**
+
+   **Option 1: Using PowerShell Script (Windows)**
+   ```powershell
+   cd DevHub
+   .\start-dev.ps1
+   ```
+
+   **Option 2: Using Bash Script (Linux/Mac)**
+   ```bash
+   cd DevHub
+   chmod +x start-dev.sh
+   ./start-dev.sh
+   ```
+
+   **Option 3: Manual Start (Two Terminals)**
+   
+   Terminal 1 - Backend:
+   ```bash
+   cd backend
+   npm run dev
    # Backend runs on http://localhost:4000
    ```
 
-6. **Start Frontend Server**
+   Terminal 2 - Frontend:
    ```bash
    cd frontend
    npm run dev
-   # Frontend runs on http://localhost:3002
+   # Frontend runs on http://localhost:3000
    ```
 
 7. **Access the Application**
-   - Open your browser and navigate to `http://localhost:3002`
+   - Open your browser and navigate to `http://localhost:3000`
    - Register for a new account or login with existing credentials
+
+### Verification
+- Backend console should show: "Connected to MongoDB"
+- Frontend should load without CORS errors
+- Check `SETUP.md` for detailed troubleshooting
 
 ## 🔐 Authentication
 
@@ -280,6 +307,57 @@ http://localhost:4000/api
 5. **File Uploads**: Test profile picture uploads
 
 ## 🚀 Deployment
+
+### Quick Deployment to Render
+
+Deploy your DevHub application to production in 30 minutes!
+
+**📚 Complete Deployment Documentation:**
+- **[deploy-to-render.md](deploy-to-render.md)** - Quick 5-step guide (START HERE)
+- **[RENDER-DEPLOYMENT.md](RENDER-DEPLOYMENT.md)** - Detailed deployment instructions
+- **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Step-by-step checklist
+- **[DEPLOYMENT-TROUBLESHOOTING.md](DEPLOYMENT-TROUBLESHOOTING.md)** - Common issues & solutions
+
+### Quick Deploy Steps
+
+1. **Push to GitHub**
+   ```bash
+   git init
+   git add .
+   git commit -m "Deploy to Render"
+   git remote add origin https://github.com/YOUR_USERNAME/devhub.git
+   git push -u origin main
+   ```
+
+2. **Deploy Backend** (10 min)
+   - Go to https://dashboard.render.com
+   - Create Web Service from GitHub repo
+   - Root Directory: `backend`
+   - Add environment variables (see RENDER-DEPLOYMENT.md)
+
+3. **Deploy Frontend** (10 min)
+   - Create another Web Service
+   - Root Directory: `frontend`
+   - Set `NEXT_PUBLIC_API_URL` to backend URL
+
+4. **Configure MongoDB** (2 min)
+   - Whitelist 0.0.0.0/0 in MongoDB Atlas
+   - Ensure cluster is running
+
+5. **Test** ✅
+   - Visit your frontend URL
+   - Check `/test-connection` page
+   - Test all features
+
+### Production URLs
+After deployment, your app will be available at:
+- **Frontend**: `https://devhub-frontend.onrender.com`
+- **Backend**: `https://devhub-backend.onrender.com`
+- **API**: `https://devhub-backend.onrender.com/api`
+
+### Cost
+- **Free Tier**: $0/month (with cold starts)
+- **Paid Tier**: $23/month (always on, no cold starts)
 
 ### Development Environment
 - **Frontend**: Next.js development server on port 3002
