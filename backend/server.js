@@ -70,6 +70,21 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// Root endpoint
+app.get('/', (req, res) => {
+    res.json({
+        message: 'DevHub API Server',
+        version: '1.0.0',
+        endpoints: {
+            health: '/api/health',
+            auth: '/api/auth/*',
+            posts: '/api/posts/*',
+            comments: '/api/comments/*',
+            buildlogs: '/api/buildlogs/*'
+        }
+    });
+});
+
 // Import Routes
 const authRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/posts.routes');
@@ -82,6 +97,16 @@ app.use('/api/posts', postRoutes); // Post routes
 app.use('/api/comments', commentRoutes); // Comment routes
 app.use('/api/buildlogs', buildLogRoutes); // Build Log routes
 
+// 404 handler - helps debug routing issues
+app.use((req, res) => {
+    console.log('404 - Route not found:', req.method, req.path);
+    res.status(404).json({
+        error: 'Route not found',
+        method: req.method,
+        path: req.path,
+        message: 'Please check the API documentation. All routes should start with /api'
+    });
+});
 
 const PORT = process.env.PORT || 4000;
 
