@@ -10,6 +10,10 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy - REQUIRED for Render deployment
+// This allows express-rate-limit to work correctly behind Render's proxy
+app.set('trust proxy', 1);
+
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -25,6 +29,9 @@ app.use(morgan('combined'));
 const allowedOrigins = [
     'http://localhost:3000',
     'https://devhub-frontend.onrender.com',
+    'https://devhub-12.onrender.com',
+    'https://hub3.onrender.com',
+    'https://hub-i7dr.onrender.com',
     process.env.FRONTEND_URL // Allow custom frontend URL from env
 ].filter(Boolean); // Remove undefined values
 
@@ -32,6 +39,11 @@ const corsOptions = {
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
+        
+        // Allow any onrender.com subdomain in production
+        if (origin && origin.includes('.onrender.com')) {
+            return callback(null, true);
+        }
         
         if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
             callback(null, true);

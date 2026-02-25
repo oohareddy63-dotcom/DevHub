@@ -2,15 +2,23 @@
 const getApiBaseUrl = () => {
     // Priority 1: Environment variable from Render
     if (process.env.NEXT_PUBLIC_API_URL) {
+        console.log('Using NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
         return process.env.NEXT_PUBLIC_API_URL;
     }
     
-    // Priority 2: Check if we're in production (deployed)
-    if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
-        return 'https://devhub-7.onrender.com/api';
+    // Priority 2: Check if we're in production (deployed on Render)
+    if (typeof window !== 'undefined') {
+        const hostname = window.location.hostname;
+        
+        // If on any Render domain, use the backend URL
+        if (hostname.includes('onrender.com')) {
+            console.log('Detected Render deployment, using backend URL');
+            return 'https://devhub-7.onrender.com/api';
+        }
     }
     
     // Priority 3: Local development
+    console.log('Using local development URL');
     return 'http://localhost:4000/api';
 };
 
