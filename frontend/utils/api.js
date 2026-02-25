@@ -1,5 +1,11 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
+// Log the API URL being used (helps debug production issues)
+if (typeof window !== 'undefined') {
+    console.log('API Base URL:', BASE_URL);
+    console.log('Environment:', process.env.NODE_ENV);
+}
+
 // Safe localStorage helpers for SSR
 const getLocalStorageItem = (key) => {
     if (typeof window !== 'undefined') {
