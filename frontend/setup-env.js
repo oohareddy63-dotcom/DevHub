@@ -5,17 +5,22 @@ const fs = require('fs');
 const path = require('path');
 
 const envFile = path.join(__dirname, '.env.production');
-const envContent = `
-# Auto-generated production environment
-NEXT_PUBLIC_API_URL=https://devhub-7.onrender.com/api
+
+// Determine the backend URL
+const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devhub-7.onrender.com/api';
+
+const envContent = `# Auto-generated production environment
+NEXT_PUBLIC_API_URL=${backendUrl}
 NODE_ENV=production
 `;
 
-// Only create if it doesn't exist or if NEXT_PUBLIC_API_URL is not set
-if (!process.env.NEXT_PUBLIC_API_URL) {
-    console.log('📝 Creating .env.production file with default values...');
-    fs.writeFileSync(envFile, envContent.trim());
-    console.log('✅ Environment file created successfully');
-} else {
-    console.log('✅ NEXT_PUBLIC_API_URL is already set:', process.env.NEXT_PUBLIC_API_URL);
-}
+console.log('========================================');
+console.log('🔧 Setting up environment variables...');
+console.log('📝 Backend API URL:', backendUrl);
+console.log('📁 Writing to:', envFile);
+console.log('========================================');
+
+// Always write the file to ensure it's up to date
+fs.writeFileSync(envFile, envContent.trim());
+console.log('✅ Environment file created successfully');
+console.log('========================================');

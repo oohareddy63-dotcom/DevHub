@@ -63,13 +63,22 @@ export const api = {
                 headers['Authorization'] = `Bearer ${token}`;
             }
             
-            console.log('API Call:', `${BASE_URL}${endpoint}`);
+            const fullUrl = `${BASE_URL}${endpoint}`;
+            console.log('========================================');
+            console.log('📤 API POST Request');
+            console.log('🔗 Full URL:', fullUrl);
+            console.log('📍 Endpoint:', endpoint);
+            console.log('📦 Data:', JSON.stringify(data, null, 2));
+            console.log('========================================');
             
-            const response = await fetch(`${BASE_URL}${endpoint}`, {
+            const response = await fetch(fullUrl, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(data),
             });
+            
+            console.log('📥 Response Status:', response.status);
+            console.log('📥 Response OK:', response.ok);
             
             // Check content type before parsing
             const contentType = response.headers.get('content-type');
@@ -78,21 +87,25 @@ export const api = {
                 // Try to parse error as JSON, fallback to text
                 if (contentType && contentType.includes('application/json')) {
                     const errorData = await response.json();
+                    console.error('❌ API Error (JSON):', errorData);
                     throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
                 } else {
                     const errorText = await response.text();
-                    throw new Error(`Server error: ${response.status}. Backend might be down or unreachable.`);
+                    console.error('❌ API Error (Text):', errorText);
+                    throw new Error(`Server error: ${response.status}. ${errorText || 'Backend might be down or unreachable.'}`);
                 }
             }
             
             // Parse successful response
             if (contentType && contentType.includes('application/json')) {
-                return response.json();
+                const result = await response.json();
+                console.log('✅ API Success:', result);
+                return result;
             } else {
                 throw new Error('Server returned non-JSON response. Check if backend is running correctly.');
             }
         } catch (error) {
-            console.error('API Error:', error);
+            console.error('❌ API Error:', error);
             throw error;
         }
     },
