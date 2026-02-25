@@ -1,6 +1,6 @@
 # DevHub - Professional Developer Network Platform
 
-A comprehensive LinkedIn-inspired developer networking platform built with modern web technologies. DevHub enables developers to connect, share knowledge, showcase skills, and collaborate on projects.
+A comprehensive  developer networking platform built with modern web technologies. DevHub enables developers to connect, share knowledge, showcase skills, and collaborate on projects.
 
 ## Features
 
