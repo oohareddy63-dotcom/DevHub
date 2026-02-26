@@ -6,8 +6,8 @@
     "dev": "next dev",
     "prebuild": "node setup-env.js",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start -p $PORT",
+    "lint": "next lint"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
@@ -18,9 +18,9 @@
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6",
-    "tailwindcss": "^4"
+    "@tailwindcss/postcss": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.1.6"
   }
 }
