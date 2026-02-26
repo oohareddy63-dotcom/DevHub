@@ -21,7 +21,7 @@ A comprehensive  developer networking platform built with modern web technologie
 - **File Uploads** - Profile pictures and document management
 - **API Integration** - RESTful API with comprehensive endpoints
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Frontend Technologies
 - **Framework**: Next.js 16.1.6 with React 19.2.3
