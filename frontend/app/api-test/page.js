@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-
 export default function ApiTest() {
     const [info, setInfo] = useState({});
 
@@ -12,7 +11,6 @@ export default function ApiTest() {
             href: window.location.href,
         });
     }, []);
-
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
