@@ -10,8 +10,6 @@ export default function BuildLogFeed() {
   const { buildLogs, isLoading, error } = useSelector((state) => state.buildLogs);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-
-
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newLog, setNewLog] = useState({
     title: '',
@@ -19,6 +17,7 @@ export default function BuildLogFeed() {
     day: 1,
     phase: 'learning',
     progress: 0,
+    
     tags: [],
     isPublic: true
   });
@@ -28,10 +27,12 @@ export default function BuildLogFeed() {
   useEffect(() => {
     dispatch(fetchBuildLogs({ phase: filterPhase }));
   }, [dispatch, filterPhase]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newLog.title.trim() || !newLog.description.trim()) return;
+    if (!newLog.title.trim() || !newLog.description.trim()) 
+      return;
 
     const result = await dispatch(createBuildLog(newLog));
     if (result.meta.requestStatus === 'fulfilled') {
