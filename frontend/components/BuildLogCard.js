@@ -18,7 +18,6 @@ import {
     Calendar, TrendingUp, AlertOctagon, ThumbsUp, Check,
     AlertCircle
 } from 'lucide-react';
-
 const phaseIcons = {
     learning: BookOpen,
     building: Code,
