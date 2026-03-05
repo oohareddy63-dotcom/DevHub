@@ -26,7 +26,6 @@ const phaseIcons = {
     deployment: Rocket,
     troubleshooting: AlertTriangle
 };
-
 const phaseColors = {
     learning: 'bg-blue-100 text-blue-800',
     building: 'bg-green-100 text-green-800',
@@ -34,7 +33,6 @@ const phaseColors = {
     deployment: 'bg-purple-100 text-purple-800',
     troubleshooting: 'bg-red-100 text-red-800'
 };
-
 export default function BuildLogCard({ log }) {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
@@ -42,6 +40,7 @@ export default function BuildLogCard({ log }) {
 
     const [activeTab, setActiveTab] = useState('details'); // details, progress, blockers
     const [showUpdateForm, setShowUpdateForm] = useState(false);
+    
     const [showBlockerForm, setShowBlockerForm] = useState(false);
 
     // Form states
@@ -56,6 +55,7 @@ export default function BuildLogCard({ log }) {
         e.preventDefault();
         await dispatch(addProgressUpdate({ logId: log._id, updateData }));
         setShowUpdateForm(false);
+        
         setUpdateData({ percentage: log.progress, note: '' });
     };
 
