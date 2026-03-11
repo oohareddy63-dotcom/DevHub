@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchBuildLogs, createBuildLog } from '../store/slices/buildLogSlice';
 import { Plus, Filter, Code } from 'lucide-react';
 import BuildLogCard from './BuildLogCard';
-
 export default function BuildLogFeed() {
   const dispatch = useDispatch();
   const { buildLogs, isLoading, error } = useSelector((state) => state.buildLogs);
