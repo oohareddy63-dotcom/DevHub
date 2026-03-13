@@ -84,7 +84,6 @@ export default function Feed({ user, posts, onPostCreated }) {
         </div>
     );
 }
-
 function PostCard({ post, onLikePost, onDeletePost }) {
     const [showComments, setShowComments] = useState(false);
     const [newComment, setNewComment] = useState('');
@@ -207,7 +206,6 @@ function PostCard({ post, onLikePost, onDeletePost }) {
         </div>
     )
 }
-
 function ActionButton({ icon, label }) {
     return (
         <button className="flex items-center justify-center gap-2 p-3 hover:bg-gray-100 rounded-md flex-1 text-gray-600 transition-colors">
