@@ -36,10 +36,8 @@ export default function BuildLogCard({ log }) {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const PhaseIcon = phaseIcons[log.phase];
-
     const [activeTab, setActiveTab] = useState('details'); // details, progress, blockers
     const [showUpdateForm, setShowUpdateForm] = useState(false);
-    
     const [showBlockerForm, setShowBlockerForm] = useState(false);
 
     // Form states
@@ -63,8 +61,7 @@ export default function BuildLogCard({ log }) {
         await dispatch(addBlocker({ logId: log._id, blockerData }));
         setShowBlockerForm(false);
         setBlockerData({ title: '', description: '' });
-    };
-
+    }
     const handleAddSolution = async (blockerId, e) => {
         e.preventDefault();
         if (!solutionText.trim()) return;
@@ -76,7 +73,6 @@ export default function BuildLogCard({ log }) {
     const handleVoteSolution = (blockerId, solutionId) => {
         dispatch(voteBlockerSolution({ logId: log._id, blockerId, solutionId }));
     };
-
     const handleResolveBlocker = (blockerId, solutionId = null) => {
         dispatch(resolveBlocker({ logId: log._id, blockerId, solutionId }));
     };
