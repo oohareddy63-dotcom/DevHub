@@ -3,16 +3,13 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Image as ImageIcon, Send, ThumbsUp, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
 import { createPost, likePost, deletePost } from '../store/slices/postSlice';
-
 export default function Feed({ user, posts, onPostCreated }) {
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.posts);
     const [newPost, setNewPost] = useState('');
-
     const handleCreatePost = async (e) => {
         e.preventDefault();
         if (!newPost.trim()) return;
-
         const result = await dispatch(createPost({ text: newPost }));
         if (result.meta.requestStatus === 'fulfilled') {
             setNewPost('');
@@ -126,7 +123,6 @@ function PostCard({ post, onLikePost, onDeletePost }) {
                     <MoreHorizontal className="h-5 w-5" />
                 </button>
             </div>
-
             {/* Content */}
             <div className="px-4 pb-2">
                 <p className="text-sm text-gray-900 whitespace-pre-wrap">{post.text}</p>
