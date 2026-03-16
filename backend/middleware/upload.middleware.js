@@ -7,7 +7,6 @@ const uploadsDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
-
 // Create subdirectories
 const profilePicsDir = path.join(uploadsDir, 'profile-pics');
 const postImagesDir = path.join(uploadsDir, 'post-images');
