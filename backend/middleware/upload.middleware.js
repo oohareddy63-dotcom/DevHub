@@ -14,7 +14,6 @@ const postImagesDir = path.join(uploadsDir, 'post-images');
 if (!fs.existsSync(profilePicsDir)) {
     fs.mkdirSync(profilePicsDir, { recursive: true });
 }
-
 if (!fs.existsSync(postImagesDir)) {
     fs.mkdirSync(postImagesDir, { recursive: true });
 }
