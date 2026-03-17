@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../utils/api';
-
 // Helper function to safely access localStorage
 const getLocalStorageItem = (key) => {
   if (typeof window !== 'undefined') {
