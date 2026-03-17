@@ -1,7 +1,6 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -10,14 +9,12 @@ if (!fs.existsSync(uploadsDir)) {
 // Create subdirectories
 const profilePicsDir = path.join(uploadsDir, 'profile-pics');
 const postImagesDir = path.join(uploadsDir, 'post-images');
-
 if (!fs.existsSync(profilePicsDir)) {
     fs.mkdirSync(profilePicsDir, { recursive: true });
 }
 if (!fs.existsSync(postImagesDir)) {
     fs.mkdirSync(postImagesDir, { recursive: true });
 }
-
 // Storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
