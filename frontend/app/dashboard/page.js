@@ -43,11 +43,9 @@ export default function Dashboard() {
             </div>
         );
     }
-
     if (!isAuthenticated) {
         return null;
     }
-
     const tabs = [
         { id: 'feed', label: 'Feed', icon: '📝' },
         { id: 'jobs', label: 'Jobs', icon: '💼' },
