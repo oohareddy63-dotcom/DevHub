@@ -4,7 +4,6 @@ import userReducer from './slices/userSlice';
 import postReducer from './slices/postSlice';
 import connectionReducer from './slices/connectionSlice';
 import buildLogReducer from './slices/buildLogSlice';
-
 export const store = configureStore({
   reducer: {
     auth: authReducer,
