@@ -8,7 +8,6 @@ const getLocalStorageItem = (key) => {
   }
   return null;
 };
-
 // Async thunks
 export const sendConnectionRequest = createAsyncThunk(
   'connections/sendRequest',
