@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation';
 import { UserPlus, UserCheck, X } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import { fetchConnectionRequests, acceptConnectionRequest, rejectConnectionRequest } from '../../store/slices/connectionSlice';
-
 export default function ConnectionRequestsPage() {
     const dispatch = useDispatch();
     const router = useRouter();
     const { connectionRequests, isLoading } = useSelector((state) => state.connections);
     const { isAuthenticated } = useSelector((state) => state.auth);
-
     useEffect(() => {
         if (!isAuthenticated) {
             router.push('/login');
@@ -26,7 +24,6 @@ export default function ConnectionRequestsPage() {
             // Request automatically removed from list by Redux
         }
     };
-
     const handleReject = async (userId) => {
         const result = await dispatch(rejectConnectionRequest(userId));
         if (result.meta.requestStatus === 'fulfilled') {
