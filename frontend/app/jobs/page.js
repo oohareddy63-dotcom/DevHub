@@ -1,7 +1,6 @@
 'use client';
 import Navbar from '../../components/Navbar';
 import { Briefcase } from 'lucide-react';
-
 export default function Jobs() {
     return (
         <div className="min-h-screen bg-[#F3F2EF] font-sans">
