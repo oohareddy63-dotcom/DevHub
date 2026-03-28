@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { loginUser } from '../../store/slices/authSlice';
-
 export default function Login() {
     const [formData, setFormData] = useState({
         email: '',
