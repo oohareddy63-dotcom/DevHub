@@ -171,7 +171,6 @@ export default function BuildLogCard({ log }) {
                         )}
                     </div>
                 )}
-
                 {/* PROGRESS HISTORY TAB */}
                 {activeTab === 'progress' && (
                     <div className="space-y-4">
