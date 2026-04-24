@@ -9,7 +9,7 @@ export default function Widgets() {
         { name: "AI Development", posts: "5.1k", trend: "up" },
         { name: "Remote Work", posts: "1.8k", trend: "down" },
         { name: "DevOps", posts: "3.2k", trend: "up" },
-        { name: "Cybersecurity", posts: "2.7k", trend: "up" }
+        { name: "Cybersecurity", posts: "2.7k", trend: " up" }
     ];
     const upcomingEvents = [
         { title: "React Conference 2024", date: "Mar 15", attendees: "500+" },
@@ -37,7 +37,7 @@ export default function Widgets() {
                     ].map(tab => (
                         <button
                             key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
+                            onClick={() => setActiveTab (tab.id)}
                             className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${activeTab === tab.id
                                     ? 'bg-blue-600 text-white'
                                     : 'text-gray-600 hover:bg-gray-100'
