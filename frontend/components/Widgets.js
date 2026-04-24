@@ -11,7 +11,6 @@ export default function Widgets() {
         { name: "DevOps", posts: "3.2k", trend: "up" },
         { name: "Cybersecurity", posts: "2.7k", trend: "up" }
     ];
-
     const upcomingEvents = [
         { title: "React Conference 2024", date: "Mar 15", attendees: "500+" },
         { title: "AI Summit", date: "Mar 20", attendees: "1000+" },
