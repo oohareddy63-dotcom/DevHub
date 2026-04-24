@@ -9,6 +9,7 @@ export default function JobBoard() {
   const mockJobs = [
     {
       id: 1,
+      
       title: 'Senior Frontend Developer',
       company: 'TechCorp',
       location: 'San Francisco, CA',
