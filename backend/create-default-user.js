@@ -15,7 +15,6 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://oohareddy6362_db_user:c
         console.log('Default user already exists');
         process.exit(0);
       }
-      
       // Create default user
       const hashedPassword = await bcrypt.hash('password123', 10);
       
