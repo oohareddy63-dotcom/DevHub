@@ -15,7 +15,6 @@ if (!fs.existsSync(profilePicsDir)) {
 if (!fs.existsSync(postImagesDir)) {
     fs.mkdirSync(postImagesDir, { recursive: true });
 }
-
 // Storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
