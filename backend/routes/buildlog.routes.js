@@ -4,7 +4,9 @@ const buildLogController = require('../controllers/buildlog.controller');
 const authMiddleware = require('../middleware/auth.middleware');
 
 // Build Log Routes
+
 router.post('/create', authMiddleware, buildLogController.createBuildLog);
+
 router.get('/', buildLogController.getBuildLogs); // Public feed
 router.get('/user/:userId', buildLogController.getUserBuildLogs);
 router.put('/like/:id', authMiddleware, buildLogController.likeBuildLog);
