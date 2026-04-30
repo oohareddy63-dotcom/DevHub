@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post.controller');
 const authMiddleware = require('../middleware/auth.middleware');
-
 // Post Routes - Updated to match specifications
 router.post('/create', authMiddleware, postController.createPost);
 router.get('/', authMiddleware, postController.getAllPosts);
