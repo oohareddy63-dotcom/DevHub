@@ -31,8 +31,6 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
-
-// File filter
 const fileFilter = (req, file, cb) => {
     // Accept images only
     if (file.mimetype.startsWith('image/')) {
