@@ -24,7 +24,6 @@ router.put('/connections/accept/:userId', authMiddleware, userController.acceptC
 router.put('/connections/reject/:userId', authMiddleware, userController.rejectConnectionRequest);
 router.get('/connections', authMiddleware, userController.getConnections);
 router.get('/connections/requests', authMiddleware, userController.getConnectionRequests);
-
 // Discover Users - Updated to match specifications
 router.get('/discover', authMiddleware, userController.discoverUsers);
 
