@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // Fallback JWT secret if not set in .env
 const JWT_SECRET = process.env.JWT_SECRET && process.env.JWT_SECRET.trim() ? process.env.JWT_SECRET : 'fallback_secret_change_in_production';
-
 // Create default user (temporary helper)
 exports.createDefaultUser = async (req, res) => {
     try {
