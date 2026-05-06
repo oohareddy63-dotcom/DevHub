@@ -6,6 +6,7 @@ import {
     addComment,
     
     requestHelp,
+    
     addProgressUpdate,
     addBlocker,
     resolveBlocker,
