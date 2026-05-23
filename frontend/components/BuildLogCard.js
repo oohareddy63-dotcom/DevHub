@@ -11,7 +11,6 @@ import {
     addBlockerSolution,
     voteBlockerSolution
 } from '../store/slices/buildLogSlice';
-
 import {
     BookOpen, Code, TestTube, Rocket, AlertTriangle,
     Heart, MessageCircle, HelpCircle,
