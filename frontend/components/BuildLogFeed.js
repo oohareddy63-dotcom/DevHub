@@ -8,7 +8,6 @@ export default function BuildLogFeed() {
   const dispatch = useDispatch();
   const { buildLogs, isLoading, error } = useSelector((state) => state.buildLogs);
   const { isAuthenticated } = useSelector((state) => state.auth);
-
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newLog, setNewLog] = useState({
     title: '',
