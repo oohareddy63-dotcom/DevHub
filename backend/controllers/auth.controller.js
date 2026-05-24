@@ -10,6 +10,7 @@ exports.createDefaultUser = async (req, res) => {
         const existingUser = await User.findOne({ email: 'devhub@example.com' });
 
         if (existingUser) {
+            
             return res.json({ message: "Default user already exists", user: existingUser });
         }
 
