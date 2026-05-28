@@ -7,7 +7,6 @@ import {
     requestHelp,
     addProgressUpdate,
     addBlocker,
-    
     resolveBlocker,
     addBlockerSolution,
     voteBlockerSolution
