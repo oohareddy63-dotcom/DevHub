@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { Play, Save, Copy, Download, Share2, Settings, Code, FileText, Terminal } from 'lucide-react';
-
 export default function CodePlayground() {
   const [activeTab, setActiveTab] = useState('code');
   const [code, setCode] = useState(`// Welcome to DevHub Code Playground
