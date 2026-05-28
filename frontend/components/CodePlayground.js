@@ -9,14 +9,12 @@ function greet(name) {
 }
 // Try running this function
 console.log(greet('Developer'));
-
 // Add your own code here
 const message = "Start coding...";
 console.log(message);`);
   const [output, setOutput] = useState('');
   const [language, setLanguage] = useState('javascript');
   const [theme, setTheme] = useState('dark');
-
   const languages = [
     { id: 'javascript', label: 'JavaScript', icon: '🟨' },
     { id: 'python', label: 'Python', icon: '🐍' },
