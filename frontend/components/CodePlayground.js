@@ -22,14 +22,12 @@ console.log(message);`);
     { id: 'css', label: 'CSS', icon: '🎨' },
     { id: 'typescript', label: 'TypeScript', icon: '📘' }
   ];
-
   const templates = {
     javascript: {
       basic: `// Basic JavaScript Template
 function hello(name) {
   return \`Hello, \${name}!\`;
 }
-
 console.log(hello("World"));`,
       function: `// Function Example
 function calculateArea(width, height) {
