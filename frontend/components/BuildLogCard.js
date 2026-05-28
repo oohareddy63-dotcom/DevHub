@@ -24,6 +24,7 @@ const phaseIcons = {
     testing: TestTube,
     deployment: Rocket,
     troubleshooting: AlertTriangle
+    
 };
 const phaseColors = {
     learning: 'bg-blue-100 text-blue-800',
