@@ -16,7 +16,6 @@ export default function Feed({ user, posts, onPostCreated }) {
             onPostCreated();
         }
     };
-    
 
     const handleLikePost = (postId) => {
         dispatch(likePost(postId));
