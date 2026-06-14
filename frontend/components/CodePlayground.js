@@ -7,7 +7,6 @@ export default function CodePlayground() {
 function greet(name) {
   return \`Hello, \${name}! Welcome to DevHub!\`;
 }
-
 // Try running this function
 console.log(greet('Developer'));
 // Add your own code here
