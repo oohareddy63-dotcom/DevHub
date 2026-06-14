@@ -22,7 +22,6 @@ export default function Feed({ user, posts, onPostCreated }) {
     const handleDeletePost = (postId) => {
         dispatch(deletePost(postId));
     };
-
     return (
         <div className="space-y-4 pb-20">
 
