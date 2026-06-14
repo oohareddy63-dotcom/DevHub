@@ -19,7 +19,6 @@ export default function Feed({ user, posts, onPostCreated }) {
     const handleLikePost = (postId) => {
         dispatch(likePost(postId));
     };
-
     const handleDeletePost = (postId) => {
         dispatch(deletePost(postId));
     };
