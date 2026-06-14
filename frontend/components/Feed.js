@@ -9,7 +9,6 @@ export default function Feed({ user, posts, onPostCreated }) {
     const [newPost, setNewPost] = useState('');
     const handleCreatePost = async (e) => {
         e.preventDefault();
-        
         if (!newPost.trim()) return;
         const result = await dispatch(createPost({ text: newPost }));
         if (result.meta.requestStatus === 'fulfilled') {
